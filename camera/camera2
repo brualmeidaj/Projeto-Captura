@@ -3,7 +3,7 @@
     <title>Untitled</title>
   </head>
   <body>
-	<a href="#start-video">Start camera</a>
+	<a href="#start-video">Iniciar camera</a>
 	<video id="user-media" autoplay playsinline></video>
 	<canvas></canvas>
 	<button> Tirar foto</button>

@@ -10,10 +10,10 @@
 <h2>Test User Media</h2>
 	<canvas></canvas>
 <video id="user-media" autoplay></video>
-<a href="#start-video">Start camera</a>
+<a href="#start-video">Iniciar camera</a>
 	<button> Tirar foto</button>
 
-<h2>Normal Input File</h2>
+<h2>Normal Inserir Arquivo</h2>
 
 <label>
   Image-only file input

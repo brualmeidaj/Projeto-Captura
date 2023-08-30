@@ -1,0 +1,110 @@
+<html>
+  <head>
+      <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="style.css"/>
+    <title>Untitled</title>
+
+  </head>
+  <body>
+<h2>Test User Media</h2>
+	<canvas></canvas>
+<video id="user-media" autoplay></video>
+<a href="#start-video">Start camera</a>
+	<button> Tirar foto</button>
+
+<h2>Normal Input File</h2>
+
+<label>
+  Image-only file input
+  <input id="take-picture" type="file" accept="image/*"  >
+</label>
+
+<img id="show-picture">
+
+  <style>
+label {
+  display: block;
+  padding: 2em;
+  margin: 2em;
+  background: lightyellow;
+  border: 1px solid orange;
+  border-radius: 5px;
+}
+label input {
+  opacity: 0.1;
+}
+img,
+video {
+  display: block;
+  max-width: 80%;
+  margin: auto;
+}
+video {
+  // display: none;
+  // position: absolute;
+  // width: 50px;
+  // height: 50px;
+  // opacity: 0.1;
+}
+</style>
+
+	<script>
+	/* Code example from Mozilla: https://developer.mozilla.org/en-US/docs/Archive/B2G_OS/API/Camera_API/Introduction */
+var takePicture = document.querySelector("#take-picture");
+takePicture.onchange = function (event) {
+  // Get a reference to the taken picture or chosen file
+  var files = event.target.files,
+      file;
+  if (files && files.length > 0) {
+      file = files[0];
+  }
+  
+  // Image reference
+  var showPicture = document.querySelector("#show-picture");
+
+  // Create ObjectURL
+  var imgURL = window.URL.createObjectURL(file);
+
+  // Set img src to ObjectURL
+  showPicture.src = imgURL;
+
+  // For performance reasons, revoke used ObjectURLs
+  URL.revokeObjectURL(imgURL);
+};
+
+// Get User Media
+const constraints = {
+  video: true
+};
+
+document.querySelector('a[href="#start-video"]').addEventListener('click', ()=>{
+  const video = document.querySelector('video#user-media');
+
+  navigator.mediaDevices.getUserMedia(constraints).
+    then((stream) => {video.srcObject = stream, video.play()});
+  
+});
+
+
+// Un-comment the following code with caution. It starts camera access right away.
+// const video = document.querySelector('video#user-media');
+// navigator.mediaDevices.getUserMedia(constraints).
+//     then((stream) => {video.srcObject = stream});
+
+document.querySelector('video#user-media').addEventListener('click', () => {
+    var canvas = document.querySelector('canvas');
+    canvas.height = video.videoHeight;
+    canvas.width = video.videoWidth;
+    var context = canvas.getContext('2d');
+    context.drawImage(video, 0, 0);
+    var link = document.createElement('a');
+    link.download = 'foto.png';
+    link.href = canvas.toDataURL();
+    link.textContent = 'Clique para baixar a imagem';
+    document.body.appendChild(link);
+});
+
+	</script>
+	  </body>
+</html>

@@ -1,0 +1,87 @@
+<html>
+  <head>
+    <title>Untitled</title>
+  </head>
+  <body>
+	<a href="#start-video">Start camera</a>
+	<video id="user-media" autoplay playsinline></video>
+	<canvas></canvas>
+	<button> Tirar foto</button>
+	<label>
+  Carregar Arquivo
+  <input id="take-picture" type="file" accept="image/*"  >
+</label>
+  <style>
+  canvas {
+  display: flex;
+  width: 100%;
+}
+video {
+  display: flex;
+  width: 100%;
+}
+a {
+  border: 3px solid black;
+  padding: 20px;
+  display: flex;
+  margin: 0 auto;
+width: 60%;
+justify-content: center;
+font-size: 17px;
+}
+button {
+  display: flex;
+  margin: 0 auto;
+    margin-top: 0px;
+  font-size: 38px;
+  background: transparent;
+  border: 3px solid;
+  padding: 20px;
+  margin-top: 27px;
+}
+label {
+  display: flex;
+  background: white;
+  border: 3px solid black;
+  border-radius: 5px;
+  justify-content: center;
+  padding: 20px;
+  width: 50%;
+  margin: 0 auto;
+    margin-top: 0px;
+    margin-bottom: 0px;
+  margin-top: 27px;
+  margin-bottom: 28px;
+}
+label input {
+  padding-left: 6px;
+}
+</style>
+
+<script>
+var video = document.querySelector('video');
+
+navigator.mediaDevices.getUserMedia({video:true})
+.then(stream => {
+    video.srcObject = stream;
+})
+.catch(error => {
+    console.log(error);
+})
+
+document.querySelector('button').addEventListener('click', () => {
+    var canvas = document.querySelector('canvas');
+    canvas.height = video.videoHeight;
+    canvas.width = video.videoWidth;
+    var context = canvas.getContext('2d');
+    context.drawImage(video, 0, 0);
+    var link = document.createElement('a');
+    link.download = 'foto.png';
+    link.href = canvas.toDataURL();
+    link.textContent = 'Clique para baixar a imagem';
+    document.body.appendChild(link);
+});
+</script>
+
+</body>
+</html>

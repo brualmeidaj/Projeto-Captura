@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Captura de Imagem</title>
+    <style>
+        #videoContainer {
+            width: 320px;
+            height: 240px;
+            border: 1px solid #ccc;
+            display: none;
+        }
+		
+		#capturedImageElement {
+  width: 90%;
+}
+
+h1 {
+  font-size: 23px;
+  text-align: center;
+  margin-top: 69px;
+}
+
+#startCameraButton {
+  display: flex;
+  margin: 0 auto;
+  width: 55%;
+  justify-content: center;
+  padding: 8px;
+}
+
+#fileInput {
+  display: none;
+}
+        #videoContainer video {
+            width: 100%;
+            height: 100%;
+        }
+        #buttonContainer {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .actionButton {
+            display: none;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Captura e Upload de Imagem</h1>
+    <div id="videoContainer">
+        <video id="videoPreview" autoplay></video>
+    </div>
+    <button id="startCameraButton" onclick="startCamera()">Iniciar Camera</button>
+    <div id="buttonContainer">
+        <button id="captureButton" class="actionButton" onclick="captureImage()">Capturar Imagem</button>
+        <input type="file" id="fileInput" accept="image/*">
+        <button id="uploadButton" class="actionButton" onclick="uploadImage()">Carregar Imagens</button>
+        <a id="downloadButton" download="captured_image.jpg" class="actionButton">Download da Imagem</a>
+    </div>
+    <img id="capturedImageElement" style="display: none;" alt="Imagem Capturada">
+    <script>
+	let videoStream;
+const videoPreview = document.getElementById('videoPreview');
+const videoContainer = document.getElementById('videoContainer');
+const startCameraButton = document.getElementById('startCameraButton');
+const captureButton = document.getElementById('captureButton');
+const uploadButton = document.getElementById('uploadButton');
+const downloadButton = document.getElementById('downloadButton');
+const fileInput = document.getElementById('fileInput');
+const capturedImageElement = document.getElementById('capturedImageElement');
+let capturedImage = null;
+
+function startCamera() {
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => {
+            videoStream = stream;
+            videoContainer.style.display = 'block';
+            videoPreview.srcObject = stream;
+            startCameraButton.style.display = 'none';
+            captureButton.style.display = 'inline-block';
+            uploadButton.style.display = 'inline-block';
+        })
+        .catch(error => {
+            console.error('Erro ao acessar a câmera: ', error);
+        });
+}
+
+function captureImage() {
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    canvas.width = videoPreview.videoWidth;
+    canvas.height = videoPreview.videoHeight;
+    context.drawImage(videoPreview, 0, 0, canvas.width, canvas.height);
+    capturedImage = canvas.toDataURL('image/jpeg');
+    capturedImageElement.src = capturedImage;
+    capturedImageElement.style.display = 'block';
+    downloadButton.href = capturedImage;
+    downloadButton.style.display = 'inline-block';
+}
+
+function uploadImage() {
+    fileInput.click();
+}
+
+fileInput.addEventListener('change', function() {
+    const file = fileInput.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            capturedImage = event.target.result;
+            capturedImageElement.src = capturedImage;
+            capturedImageElement.style.display = 'block';
+            downloadButton.href = capturedImage;
+            downloadButton.style.display = 'inline-block';
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+function startCamera() {
+    // Verificar se o navegador suporta a API getUserMedia
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        // Solicitar permissão para acessar a câmera
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                // Permissão concedida, manipular o stream de vídeo
+                videoStream = stream;
+                videoContainer.style.display = 'block';
+                videoPreview.srcObject = stream;
+                startCameraButton.style.display = 'none';
+                captureButton.style.display = 'inline-block';
+                uploadButton.style.display = 'inline-block';
+            })
+            .catch(error => {
+                // Permissão negada ou erro ao acessar a câmera
+                console.error('Erro ao acessar a câmera: ', error);
+            });
+    } else {
+        // Navegador não suporta a API getUserMedia
+        console.error('Seu navegador não suporta a API getUserMedia.');
+    }
+}
+
+	</script>
+</body>
+</html>
